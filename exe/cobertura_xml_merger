@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'cobertura_xml_merger'
+
+CoberturaXmlMerger::Cli.start
