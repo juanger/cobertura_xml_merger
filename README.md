@@ -1,4 +1,4 @@
-# CoberturaXmlMerger
+# CoberturaXmlMerger [![Build Status](https://travis-ci.org/juanger/cobertura_xml_merger.svg?branch=master)](https://travis-ci.org/juanger/cobertura_xml_merger)
 
 Merge Cobertura XML reports into a single file.
 
