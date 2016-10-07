@@ -88,15 +88,32 @@ module CoberturaXmlMerger
       end
 
       package2.css('class').each do |klass|
+        lines = klasses.delete(klass['filename'])
         klass.css('line').each do |line|
-          lines = klasses[klass['filename']]
+          next unless lines
+
           begin
             line['hits'] = lines[line['number']] + line['hits'].to_i
           rescue => e
-            puts "error matching #{klass['filename']} line #{line['number']}" if @verbose
+            puts e.message
+            puts "error matching #{klass['filename']} line #{line['number']}"
             puts lines.inspect if @verbose
+            puts line.inspect if @verbose
+
             throw e
           end
+        end
+      end
+
+      # This is a hacky way to keep lines from first xml that don't appear in second xml
+      unless klasses.empty?
+        klasses.each do |klass, lines|
+          klass_name = klass.split('/').last.split('.').first
+          line_nodes = lines.map do |number, hits|
+            "<line number='#{number}' branch='false' hits='#{hits}'/>"
+          end.join("\n")
+          new_class_node = "<class name='#{klass_name}' filename='#{klass}'>#{line_nodes}</class>"
+          package2.css('class').last.add_next_sibling(new_class_node)
         end
       end
 

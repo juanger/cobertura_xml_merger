@@ -30,6 +30,12 @@ describe CoberturaXmlMerger::Merger do
                   <line number='10' branch='false' hits='2'/>
                 </lines>
               </class>
+              <class name='unique_controller' filename='app/controllers/unique_controller.rb' line-rate='1.0' branch-rate='0' complexity='0'>
+                <methods/>
+                <lines>
+                  <line number='2' branch='false' hits='0'/>
+                </lines>
+              </class>
             </classes>
           </package>
         </packages>
@@ -56,6 +62,12 @@ describe CoberturaXmlMerger::Merger do
                   <line number='10' branch='false' hits='1'/>
                 </lines>
               </class>
+              <class name='another_controller' filename='app/controllers/another_controller.rb' line-rate='1.0' branch-rate='0' complexity='0'>
+                <methods/>
+                <lines>
+                  <line number='1' branch='false' hits='1'/>
+                </lines>
+              </class>
             </classes>
           </package>
         </packages>
@@ -64,8 +76,17 @@ describe CoberturaXmlMerger::Merger do
 
     it 'should add line hits' do
       merged_xml = @merger.merge_xml(@xml1, @xml2)
-      merged_xml.must_match /<line number="8"[^>]+hits="1"\/>/
-      merged_xml.must_match /<line number="10"[^>]+hits="3"\/>/
+      merged_xml.must_match %r{<line number="8"[^>]+hits="1"/>}
+      merged_xml.must_match %r{<line number="10"[^>]+hits="3"/>}
+    end
+
+    it 'should keep classes only ocurring in one file' do
+      merged_xml = @merger.merge_xml(@xml1, @xml2)
+      merged_xml.must_match %r{<class name="another_controller"[^>]+>}
+      merged_xml.must_match %r{<line number="1"[^>]+hits="1"/>}
+
+      merged_xml.must_match %r{<class name="unique_controller"[^>]+>}
+      merged_xml.must_match %r{<line number="2"[^>]+hits="0"/>}
     end
   end
 end

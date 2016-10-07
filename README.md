@@ -7,9 +7,6 @@ Merge Cobertura XML reports into a single file.
   1) It assumes you used the simplecov-cobertura gem to generate the reports which means only one package
     per report.
 
-  2) It assumes your code is the same, so all reports should have the same number of classes and lines
-    in each class
-
 ## Installation
 
     $ gem install cobertura_xml_merger
